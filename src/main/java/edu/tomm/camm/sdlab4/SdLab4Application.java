@@ -15,9 +15,12 @@ public class SdLab4Application {
     public static void main(String[] args) {
         // Fit della lista prima di fare il run della webapp
         corsi = new ArrayList<>();
-        Corso cs = new Corso("Informatica");
-        cs.aggiungiEsame(new Esame("Sistemi Distribuiti", 8));
-        corsi.add(cs);
+        Corso cs1 = new Corso("Informatica");
+        cs1.aggiungiEsame(new Esame("Sistemi Distribuiti", 8));
+        Corso cs2 = new Corso("Fisica");
+        cs2.aggiungiEsame(new Esame("Analisi 1", 8));
+        corsi.add(cs1);
+        corsi.add(cs2);
         SpringApplication.run(SdLab4Application.class, args);
     }
 

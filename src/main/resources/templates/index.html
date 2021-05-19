@@ -43,6 +43,9 @@
     $( document ).ready(async function () {
       await getCorsi();
       getEsami();
+
+      $('#selezioneCorsoDiLaurea').change(() => getEsami());
+
     });
 
     // Ottiene i corsi disponibili
