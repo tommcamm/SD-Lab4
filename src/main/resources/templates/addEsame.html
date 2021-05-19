@@ -41,9 +41,41 @@
         </form>
     </div>
 
+
+
+    <!-- Toast informativi -->
+    <div class="toast position-fixed align-items-center text-white bg-success bottom-0 start-0"
+         role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <strong>Successo!</strong> esame aggiunto
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <div class="toast position-fixed align-items-center text-white bg-danger bottom-0 start-0"
+         role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <strong>Errore!</strong> <a id="errorBody">errore generico</a>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+
     <script>
         $( document ).ready(function () {
             console.log("loaded and ready!");
+
+            // Inizializzazione toast
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+            var toastList = toastElList.map(function(toastEl) {
+                // Creates an array of toasts (it only initializes them)
+                return new bootstrap.Toast(toastEl) // No need for options; use the default options
+            });
 
             // Callback relativo al bottone di aggiunta esame
             $('#formAggiungiBtn').click(function () {
@@ -57,12 +89,21 @@
                         nomeEsame: $('#esameInput').val(),
                         cfu: $('#cfuInput').val(),
                     },
-                    success: function(response) {
-                        alert("ok");
+                    success: function() {
+                        toastList[0].show();
                     },
                     error: function(response){
-                        console.log(response.responseJSON);
-                        alert(response.responseJSON.msg);
+                        switch(response.responseJSON.msg){
+                            case 'exam_already_inserted':
+                                $('#errorBody').html("esame già inserito");
+                                break;
+                            case 'course_not_found':
+                                $('#errorBody').html("corso non esistente");
+                                break;
+                            default:
+                                $('#errorBody').html("problema inaspettato");
+                        }
+                        toastList[1].show();
                     }
                 });
             });

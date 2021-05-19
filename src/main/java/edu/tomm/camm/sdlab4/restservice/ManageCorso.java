@@ -48,7 +48,7 @@ public class ManageCorso {
             body.setMsg("success");
             return ResponseEntity.ok(body);
         } else {
-            body.setMsg("not_found");
+            body.setMsg("course_not_found");
             return ResponseEntity.badRequest().body(body);
         }
     }
