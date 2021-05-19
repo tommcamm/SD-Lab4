@@ -52,4 +52,32 @@ public class ManageCorso {
             return ResponseEntity.badRequest().body(body);
         }
     }
+
+    @PutMapping("/api/{IDCorsoDiLaurea}/{IDEsame}")
+    public ResponseEntity<?> modificaEsame(@PathVariable String IDCorsoDiLaurea,
+                                           @PathVariable String IDEsame,
+                                           @RequestParam String nomeEsame,
+                                           @RequestParam String cfu
+                                           ) {
+        AjaxResponseBody body = new AjaxResponseBody();
+        List<Corso> listaCorsi = SdLab4Application.corsi;
+
+        if(listaCorsi.contains(new Corso(IDCorsoDiLaurea))){
+            List<Esame> listaEsami = listaCorsi.get(listaCorsi.indexOf(new Corso(IDCorsoDiLaurea))).getEsami();
+
+            if(listaEsami.contains(new Esame(IDEsame, 0))) {
+                listaEsami.remove(new Esame(IDEsame, 0));
+                listaEsami.add(new Esame(nomeEsame, Integer.parseInt(cfu)));
+
+                return ResponseEntity.ok(new Esame(nomeEsame, Integer.parseInt(cfu)));
+            } else {
+                body.setMsg("exam_not_found");
+                return ResponseEntity.badRequest().body(body);
+            }
+
+        } else {
+            body.setMsg("course_not_found");
+            return ResponseEntity.badRequest().body(body);
+        }
+    }
 }

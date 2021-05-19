@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Modifica Esame</title>
+
+  <!--/* Add the jquery lib */-->
+  <script th:src="@{/js/jquery-3.6.0.min.js}" type="text/javascript"></script>
+  <!--/* bootstrap tags */-->
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+  <script th:src="@{/js/bootstrap.bundle.min.js}" type="text/javascript"></script>
+
+</head>
+<body>
+<div class="container">
+  <h1>Modifica Esame</h1>
+  <br/>
+  <div class="row row-cols-lg-auto g-3 align-items-center">
+    <div class="col-12">
+      <label for="selezioneEsame" class="visually-hidden">Esame Selezionato: </label>
+      <select class="form-select w-25" id="selezioneEsame">
+      </select>
+    </div>
+  </div>
+  <br/>
+
+  <form class="row row-cols-lg-auto g-3 align-items-center" id="aggiuntaEsameForm">
+    <div class="col-12">
+      <label class="visually-hidden" for="corsoInput">Nome Corso</label>
+      <div class="input-group">
+        <input type="text" class="form-control" id="corsoInput" placeholder="Nome Corso">
+      </div>
+    </div>
+    <div class="col-12">
+      <label class="visually-hidden" for="esameInput">Nome Esame</label>
+      <div class="input-group">
+        <input type="text" class="form-control" id="esameInput" placeholder="Nome Esame">
+      </div>
+    </div>
+    <div class="col-12">
+      <label class="visually-hidden" for="cfuInput">CFU</label>
+      <div class="input-group">
+        <input type="text" class="form-control" id="cfuInput" placeholder="CFU">
+      </div>
+    </div>
+    <div class="col-12">
+      <button type="button" class="btn btn-primary" id="formAggiungiBtn">Aggiungi</button>
+    </div>
+  </form>
+</div>
+
+
+
+<!-- Toast informativi -->
+<div class="toast position-fixed align-items-center text-white bg-success bottom-0 start-0"
+     role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      <strong>Successo!</strong> esame aggiunto
+    </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+
+<div class="toast position-fixed align-items-center text-white bg-danger bottom-0 start-0"
+     role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      <strong>Errore!</strong> <a id="errorBody">errore generico</a>
+    </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+
+<script>
+  $( document ).ready(function () {
+    console.log("loaded and ready!");
+    let location = window.location.pathname;
+    let regExp = new RegExp('(?<=\\/)(.*?)(?=\\/)');
+    console.log(location);
+    console.log(location.match(regExp));
+    console.log(regExp);
+
+
+
+    // Inizializzazione toast
+    let toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    let toastList = toastElList.map(function(toastEl) {
+      // Creates an array of toasts (it only initializes them)
+      return new bootstrap.Toast(toastEl) // No need for options; use the default options
+    });
+
+    // Callback relativo al bottone di aggiunta esame
+    $('#formAggiungiBtn').click(function () {
+      console.log("ajax call started");
+      $.ajax({
+        type: "POST",
+        method: "POST",
+        url: `/api`,
+        data:{
+          nomeCorso: $('#corsoInput').val(),
+          nomeEsame: $('#esameInput').val(),
+          cfu: $('#cfuInput').val(),
+        },
+        success: function() {
+          toastList[0].show();
+        },
+        error: function(response){
+          switch(response.responseJSON.msg){
+            case 'exam_already_inserted':
+              $('#errorBody').html("esame già inserito");
+              break;
+            case 'course_not_found':
+              $('#errorBody').html("corso non esistente");
+              break;
+            default:
+              $('#errorBody').html("problema inaspettato");
+          }
+          toastList[1].show();
+        }
+      });
+    });
+  });
+
+  function getEsami() {
+    $.ajax({
+      type: "GET",
+      url: `/api/${$("#selezioneCorsoDiLaurea").val()}/esami`,
+      success: function (result) {
+        // Svuotamento della tabella
+        $('#tabellaEsamiBody').html("");
+
+        // fill del campo corsi di laurea usando endpoint
+        result.forEach(obj => {
+          $('#tabellaEsamiBody').append("<tr>");
+          Object.entries(obj).forEach(([key, value]) => {
+            if (key === 'nome') {
+              $('#tabellaEsamiBody').append(`<td>
+                                       ${value}
+                                  </td>`);
+            }
+            if (key === 'cfu') {
+              $('#tabellaEsamiBody').append(`<td>
+                                       ${value}
+                                  </td>`);
+            }
+          });
+          $('#tabellaEsamiBody').append("</tr>");
+        });
+      },
+      error: function() {
+        //foo
+      }
+    });
+  }
+</script>
+</body>

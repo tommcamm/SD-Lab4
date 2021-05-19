@@ -16,12 +16,12 @@ public class Esame {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Esame esame = (Esame) o;
-        return cfu == esame.cfu && nome.equals(esame.nome);
+        return nome.equals(esame.nome);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nome, cfu);
+        return Objects.hash(nome);
     }
 
     @Override
