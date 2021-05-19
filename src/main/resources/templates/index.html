@@ -13,12 +13,93 @@
 
 </head>
 <body>
-  <h1>Lab 4 index</h1>
+  <div class="container">
+    <h1>Lista esami</h1>
+    <div class="row row-cols-lg-auto align-items-center">
+      <label for="selezioneCorsoDiLaurea">Corso di Laurea Selezionato: </label>
+        <select class="form-select w-25" id="selezioneCorsoDiLaurea">
+        </select>
+    </div>
+
+    <!-- Tabella esami -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Nome</th>
+          <th scope="col">CFU</th>
+        </tr>
+      </thead>
+      <tbody id="tabellaEsamiBody">
+        <tr>
+          <td>Errore</td>
+          <td>Critico!</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
 
   <script>
-    $( document ).ready(function() {
-      console.log("Ready!");
+    $( document ).ready(async function () {
+      await getCorsi();
+      getEsami();
     });
+
+    // Ottiene i corsi disponibili
+    async function getCorsi() {
+      await $.ajax({
+        type: "GET",
+        url: "/api",
+        success: function(result){
+          console.log(result);
+          // fill del campo corsi di laurea usando endpoint
+          result.forEach(obj => {
+            Object.entries(obj).forEach(([key, value]) => {
+              if (key === 'corsoDiLaurea') {
+                $('#selezioneCorsoDiLaurea').append(`<option value="${value}">
+                                       ${value}
+                                  </option>`);
+              }
+            });
+          });
+        },
+        error: function() {
+          // foo
+        }
+      });
+    }
+
+    function getEsami() {
+      $.ajax({
+        type: "GET",
+        url: `/api/${$("#selezioneCorsoDiLaurea").val()}/esami`,
+        success: function (result) {
+          // Svuotamento della tabella
+          $('#tabellaEsamiBody').html("");
+
+          // fill del campo corsi di laurea usando endpoint
+          result.forEach(obj => {
+            $('#tabellaEsamiBody').append("<tr>");
+            Object.entries(obj).forEach(([key, value]) => {
+              if (key === 'nome') {
+                $('#tabellaEsamiBody').append(`<td>
+                                       ${value}
+                                  </td>`);
+              }
+              if (key === 'cfu') {
+                $('#tabellaEsamiBody').append(`<td>
+                                       ${value}
+                                  </td>`);
+              }
+            });
+            $('#tabellaEsamiBody').append("</tr>");
+          });
+        },
+        error: function() {
+          //foo
+        }
+      });
+    }
   </script>
 </body>
 </html>
