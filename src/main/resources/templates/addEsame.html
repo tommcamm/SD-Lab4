@@ -15,6 +15,57 @@
 <body>
     <div class="container">
         <h1>Aggiunta Esame</h1>
-
+        <br/>
+        <form class="row row-cols-lg-auto g-3 align-items-center" id="aggiuntaEsameForm">
+            <div class="col-12">
+                <label class="visually-hidden" for="corsoInput">Nome Corso</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="corsoInput" placeholder="Nome Corso">
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="visually-hidden" for="esameInput">Nome Esame</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="esameInput" placeholder="Nome Esame">
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="visually-hidden" for="cfuInput">CFU</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="cfuInput" placeholder="CFU">
+                </div>
+            </div>
+            <div class="col-12">
+                <button type="button" class="btn btn-primary" id="formAggiungiBtn">Aggiungi</button>
+            </div>
+        </form>
     </div>
+
+    <script>
+        $( document ).ready(function () {
+            console.log("loaded and ready!");
+
+            // Callback relativo al bottone di aggiunta esame
+            $('#formAggiungiBtn').click(function () {
+                console.log("ajax call started");
+                $.ajax({
+                    type: "POST",
+                    method: "POST",
+                    url: `/api`,
+                    data:{
+                        nomeCorso: $('#corsoInput').val(),
+                        nomeEsame: $('#esameInput').val(),
+                        cfu: $('#cfuInput').val(),
+                    },
+                    success: function(response) {
+                        alert("ok");
+                    },
+                    error: function(response){
+                        console.log(response.responseJSON);
+                        alert(response.responseJSON.msg);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
