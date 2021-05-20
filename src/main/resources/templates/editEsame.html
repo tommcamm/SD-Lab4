@@ -14,24 +14,13 @@
 </head>
 <body>
 <div class="container">
-  <h1>Modifica Esame</h1>
+  <h1>Modifica Esame per corso <a id="corsoLabel"></a></h1>
   <br/>
-  <div class="row row-cols-lg-auto g-3 align-items-center">
-    <div class="col-12">
       <label for="selezioneEsame" class="visually-hidden">Esame Selezionato: </label>
-      <select class="form-select w-25" id="selezioneEsame">
-      </select>
-    </div>
-  </div>
+      <select class="form-select w-25" id="selezioneEsame"></select>
   <br/>
 
   <form class="row row-cols-lg-auto g-3 align-items-center" id="aggiuntaEsameForm">
-    <div class="col-12">
-      <label class="visually-hidden" for="corsoInput">Nome Corso</label>
-      <div class="input-group">
-        <input type="text" class="form-control" id="corsoInput" placeholder="Nome Corso">
-      </div>
-    </div>
     <div class="col-12">
       <label class="visually-hidden" for="esameInput">Nome Esame</label>
       <div class="input-group">
@@ -45,7 +34,7 @@
       </div>
     </div>
     <div class="col-12">
-      <button type="button" class="btn btn-primary" id="formAggiungiBtn">Aggiungi</button>
+      <button type="button" class="btn btn-info" id="formModificaBtn">Modifica</button>
     </div>
   </form>
 </div>
@@ -78,12 +67,39 @@
 <script>
   $( document ).ready(function () {
     console.log("loaded and ready!");
-    let location = window.location.pathname;
-    let regExp = new RegExp('(?<=\\/)(.*?)(?=\\/)');
-    console.log(location);
-    console.log(location.match(regExp));
-    console.log(regExp);
 
+    // Ottenendo i dati dal pathname
+    let location = window.location.pathname;
+    let url_parts = location.replace(/\/\s*$/,'').split('/');
+    let corso = url_parts[2].replace(/%20/g, " ");
+    let esame = url_parts[3].replace(/%20/g, " ");
+
+    $('#corsoLabel').html(corso);
+
+    $('#selezioneEsame').append(`<option value="${esame}">
+                                       ${esame}
+                                  </option>`);
+
+    getEsami();
+
+    $.ajax({
+      type: "GET",
+      method: "GET",
+      url: `/api/${corso}/${esame}`,
+      success: function (result) {
+        $('#esameInput').val(result.nome);
+        $('#cfuInput').val(result.cfu);
+      },
+      error: function() {
+        $('#errorBody').html("errore nel caricare i dati");
+        toastList[1].show();
+      }
+    });
+
+
+    $('#selezioneEsame').change(function () {
+      document.location.href = `${window.location.origin}/api/${corso}/${$('#selezioneEsame').val()}/editEsame`;
+    });
 
 
     // Inizializzazione toast
@@ -94,24 +110,22 @@
     });
 
     // Callback relativo al bottone di aggiunta esame
-    $('#formAggiungiBtn').click(function () {
-      console.log("ajax call started");
+    $('#formModificaBtn').click(function () {
       $.ajax({
-        type: "POST",
-        method: "POST",
-        url: `/api`,
+        type: "PUT",
+        method: "PUT",
+        url: `/api/${corso}/${esame}`,
         data:{
-          nomeCorso: $('#corsoInput').val(),
           nomeEsame: $('#esameInput').val(),
           cfu: $('#cfuInput').val(),
         },
-        success: function() {
-          toastList[0].show();
+        success: function(res) {
+          document.location.href = `${window.location.origin}/api/${corso}/${res.nome}/editEsame`;
         },
         error: function(response){
           switch(response.responseJSON.msg){
-            case 'exam_already_inserted':
-              $('#errorBody').html("esame già inserito");
+            case 'exam_not_found':
+              $('#errorBody').html("esame non trovato");
               break;
             case 'course_not_found':
               $('#errorBody').html("corso non esistente");
@@ -123,38 +137,28 @@
         }
       });
     });
-  });
 
-  function getEsami() {
-    $.ajax({
-      type: "GET",
-      url: `/api/${$("#selezioneCorsoDiLaurea").val()}/esami`,
-      success: function (result) {
-        // Svuotamento della tabella
-        $('#tabellaEsamiBody').html("");
-
-        // fill del campo corsi di laurea usando endpoint
-        result.forEach(obj => {
-          $('#tabellaEsamiBody').append("<tr>");
-          Object.entries(obj).forEach(([key, value]) => {
-            if (key === 'nome') {
-              $('#tabellaEsamiBody').append(`<td>
+    function getEsami() {
+      $.ajax({
+        type: "GET",
+        url: `/api/${corso}/esami`,
+        success: function (result) {
+          // fill del campo corsi di laurea usando endpoint
+          result.forEach(obj => {
+            Object.entries(obj).forEach(([key, value]) => {
+              if (key === 'nome' && value !== esame) {
+                $('#selezioneEsame').append(`<option value="${value}">
                                        ${value}
-                                  </td>`);
-            }
-            if (key === 'cfu') {
-              $('#tabellaEsamiBody').append(`<td>
-                                       ${value}
-                                  </td>`);
-            }
+                                  </option>`);
+              }
+            });
           });
-          $('#tabellaEsamiBody').append("</tr>");
-        });
-      },
-      error: function() {
-        //foo
-      }
-    });
-  }
+        },
+        error: function() {
+          //foo
+        }
+      });
+    }
+  });
 </script>
 </body>

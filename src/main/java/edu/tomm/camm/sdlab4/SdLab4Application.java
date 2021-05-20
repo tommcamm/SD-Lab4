@@ -17,6 +17,7 @@ public class SdLab4Application {
         corsi = new ArrayList<>();
         Corso cs1 = new Corso("Informatica");
         cs1.aggiungiEsame(new Esame("Sistemi Distribuiti", 8));
+        cs1.aggiungiEsame(new Esame("Programmazione 1", 8));
         Corso cs2 = new Corso("Fisica");
         cs2.aggiungiEsame(new Esame("Analisi 1", 8));
         corsi.add(cs1);

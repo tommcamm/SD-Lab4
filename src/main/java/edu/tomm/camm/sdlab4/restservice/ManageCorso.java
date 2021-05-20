@@ -31,6 +31,19 @@ public class ManageCorso {
             return null;
     }
 
+    @GetMapping("/api/{IDCorsoDiLaurea}/{IDEsame}")
+    public Esame getEsame(@PathVariable String IDCorsoDiLaurea, @PathVariable String IDEsame) {
+        List<Esame> esami = listaEsami(IDCorsoDiLaurea);
+        if (esami != null) {
+            return esami.stream()
+                    .filter(c -> c.getNome().equals(IDEsame))
+                    .findFirst()
+                    .orElse(null);
+        } else {
+            return null;
+        }
+    }
+
     @PostMapping("/api")
     public ResponseEntity<?> aggiuntaEsame(@RequestParam String nomeCorso,
                                            @RequestParam String nomeEsame,
