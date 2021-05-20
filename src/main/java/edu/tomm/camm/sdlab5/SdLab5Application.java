@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-public class SdLab4Application {
+public class SdLab5Application {
     public static List<Corso> corsi;
 
     public static void main(String[] args) {
@@ -22,7 +22,7 @@ public class SdLab4Application {
         cs2.aggiungiEsame(new Esame("Analisi 1", 8));
         corsi.add(cs1);
         corsi.add(cs2);
-        SpringApplication.run(SdLab4Application.class, args);
+        SpringApplication.run(SdLab5Application.class, args);
     }
 
 }

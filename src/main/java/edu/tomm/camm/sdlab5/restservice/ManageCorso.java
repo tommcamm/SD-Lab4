@@ -1,6 +1,6 @@
 package edu.tomm.camm.sdlab5.restservice;
 
-import edu.tomm.camm.sdlab5.SdLab4Application;
+import edu.tomm.camm.sdlab5.SdLab5Application;
 import edu.tomm.camm.sdlab5.entities.AjaxResponseBody;
 import edu.tomm.camm.sdlab5.entities.Corso;
 import edu.tomm.camm.sdlab5.entities.Esame;
@@ -14,12 +14,12 @@ public class ManageCorso {
 
     @GetMapping("/api")
     public List<Corso> listaCorsi() {
-        return SdLab4Application.corsi;
+        return SdLab5Application.corsi;
     }
 
     @GetMapping("/api/{IDCorsoDiLaurea}/esami")
     public List<Esame> listaEsami(@PathVariable String IDCorsoDiLaurea) {
-        Corso cs = SdLab4Application.corsi
+        Corso cs = SdLab5Application.corsi
                 .stream()
                 .filter(c -> c.getCorsoDiLaurea().equals(IDCorsoDiLaurea))
                 .findFirst()
@@ -48,7 +48,7 @@ public class ManageCorso {
     public ResponseEntity<?> aggiuntaEsame(@RequestParam String nomeCorso,
                                            @RequestParam String nomeEsame,
                                            @RequestParam String cfu) {
-        List<Corso> listaCorsi = SdLab4Application.corsi;
+        List<Corso> listaCorsi = SdLab5Application.corsi;
         AjaxResponseBody body = new AjaxResponseBody();
 
         if(listaCorsi.contains(new Corso(nomeCorso))){
@@ -73,7 +73,7 @@ public class ManageCorso {
                                            @RequestParam String cfu
                                            ) {
         AjaxResponseBody body = new AjaxResponseBody();
-        List<Corso> listaCorsi = SdLab4Application.corsi;
+        List<Corso> listaCorsi = SdLab5Application.corsi;
 
         if(listaCorsi.contains(new Corso(IDCorsoDiLaurea))){
             List<Esame> listaEsami = listaCorsi.get(listaCorsi.indexOf(new Corso(IDCorsoDiLaurea))).getEsami();

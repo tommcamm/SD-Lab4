@@ -1,6 +1,6 @@
 package edu.tomm.camm.sdlab5.controller;
 
-import edu.tomm.camm.sdlab5.SdLab4Application;
+import edu.tomm.camm.sdlab5.SdLab5Application;
 import edu.tomm.camm.sdlab5.entities.Corso;
 import edu.tomm.camm.sdlab5.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -22,7 +22,7 @@ public class WebController {
 
     @GetMapping("api/{IDCorsoDiLaurea}/{IDEsame}/editEsame")
     public String editEsame(@PathVariable String IDCorsoDiLaurea, @PathVariable String IDEsame) {
-        Corso cs = SdLab4Application.corsi.stream()
+        Corso cs = SdLab5Application.corsi.stream()
                     .filter(c -> c.getCorsoDiLaurea().equals(IDCorsoDiLaurea))
                     .findFirst()
                     .orElseThrow(ResourceNotFoundException::new);
