@@ -1,8 +1,8 @@
-package edu.tomm.camm.sdlab4.controller;
+package edu.tomm.camm.sdlab5.controller;
 
-import edu.tomm.camm.sdlab4.SdLab4Application;
-import edu.tomm.camm.sdlab4.entities.Corso;
-import edu.tomm.camm.sdlab4.exceptions.ResourceNotFoundException;
+import edu.tomm.camm.sdlab5.SdLab4Application;
+import edu.tomm.camm.sdlab5.entities.Corso;
+import edu.tomm.camm.sdlab5.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

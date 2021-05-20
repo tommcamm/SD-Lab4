@@ -1,9 +1,9 @@
-package edu.tomm.camm.sdlab4.restservice;
+package edu.tomm.camm.sdlab5.restservice;
 
-import edu.tomm.camm.sdlab4.SdLab4Application;
-import edu.tomm.camm.sdlab4.entities.AjaxResponseBody;
-import edu.tomm.camm.sdlab4.entities.Corso;
-import edu.tomm.camm.sdlab4.entities.Esame;
+import edu.tomm.camm.sdlab5.SdLab4Application;
+import edu.tomm.camm.sdlab5.entities.AjaxResponseBody;
+import edu.tomm.camm.sdlab5.entities.Corso;
+import edu.tomm.camm.sdlab5.entities.Esame;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

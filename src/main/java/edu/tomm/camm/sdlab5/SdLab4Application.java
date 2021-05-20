@@ -1,7 +1,7 @@
-package edu.tomm.camm.sdlab4;
+package edu.tomm.camm.sdlab5;
 
-import edu.tomm.camm.sdlab4.entities.Corso;
-import edu.tomm.camm.sdlab4.entities.Esame;
+import edu.tomm.camm.sdlab5.entities.Corso;
+import edu.tomm.camm.sdlab5.entities.Esame;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

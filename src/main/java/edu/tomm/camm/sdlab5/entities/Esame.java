@@ -1,4 +1,4 @@
-package edu.tomm.camm.sdlab4.entities;
+package edu.tomm.camm.sdlab5.entities;
 
 import java.util.Objects;
 
